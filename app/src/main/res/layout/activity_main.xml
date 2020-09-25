@@ -15,7 +15,6 @@
             android:id="@+id/editEmailLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:errorEnabled="true"
             android:textColorHint="@color/black">
         ​
         <EditText
@@ -36,7 +35,6 @@
             android:id="@+id/editPwdLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:errorEnabled="true"
             android:textColorHint="@color/black">
         ​
         <EditText
@@ -56,7 +54,6 @@
             android:id="@+id/editCheckPwdLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:errorEnabled="true"
             android:textColorHint="@color/black">
         ​
         <EditText
@@ -76,7 +73,6 @@
             android:id="@+id/editNameLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:errorEnabled="true"
             android:textColorHint="@color/black">
         ​
         <EditText
