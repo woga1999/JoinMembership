@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.support.design.widget.TextInputLayout
 import android.support.v7.app.AppCompatActivity
 import android.widget.EditText
+import android.widget.RadioButton
+import android.widget.Toast
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
@@ -37,6 +39,20 @@ class MainActivity : AppCompatActivity() {
         btnJoin.isEnabled = isDone
     }
 
+    private fun setData(){
+
+        //생년월일 선택
+
+        //성별선택
+        sexRadioGroup.setOnCheckedChangeListener { group, checkedId ->
+            val radio: RadioButton = findViewById(checkedId)
+            Toast.makeText(applicationContext, "On checked Changed : ${radio.text}", Toast.LENGTH_SHORT).show()
+            isCorrectArray[4] = checkedId != -1
+        }
+
+        //체크박스 선택
+    }
+
     private fun inputData(){
         val inputEmail = RxTextView.textChanges(inputDataArray[0])
             .map { it.isEmpty() ||Pattern.matches(Constant.regexEmail, inputDataArray[0].text.toString())}
@@ -62,7 +78,7 @@ class MainActivity : AppCompatActivity() {
                 isCorrectArray[3] = it
                 displayMsg(3,it)
             }
-        
+        viewDisposables.addAll(inputEmail, inputPwd, checkInputPwd, inputNickName)
     }
 
     private fun displayMsg(index:Int, check:Boolean){
