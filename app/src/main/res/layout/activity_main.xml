@@ -97,6 +97,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:backgroundTint="@color/colorPrimary"
+            android:singleLine = "true"
+            android:lines = "1"
             android:hint="@string/birth" />
     </android.support.design.widget.TextInputLayout>
 
