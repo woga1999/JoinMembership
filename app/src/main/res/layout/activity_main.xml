@@ -82,8 +82,6 @@
                 android:backgroundTint="@color/white"
                 android:hint="@string/nickname"
                 android:inputType="text"
-                android:maxLength="12"
-                android:maxLines="1"
                 android:textColor="@color/black" />
     </android.support.design.widget.TextInputLayout>
 
@@ -102,9 +100,15 @@
     </android.support.design.widget.TextInputLayout>
 
     <!--성별선택-->
-
-    <RadioGroup android:layout_width="match_parent" android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    <TextView android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:text="@string/choiceSex"
+    />
+    <RadioGroup android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/sexRadioGroup"
+    >
         <RadioButton android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:text="@string/man"/>
         <RadioButton android:layout_width="wrap_content" android:layout_height="wrap_content"

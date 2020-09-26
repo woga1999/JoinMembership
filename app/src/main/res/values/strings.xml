@@ -5,6 +5,7 @@
     <string name="checkPwd">Check Password</string>
     <string name="nickname">Nickname</string>
     <string name="brith">birth</string>
+    <string name="choiceSex">성별선택(필수)</string>
     <string name="man">Male</string>
     <string name="woman">Female</string>
     <string name="none">Nothing</string>

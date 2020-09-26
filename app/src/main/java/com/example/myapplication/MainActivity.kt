@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         inputDataArray = arrayOf(editEmail, editPwd, editCheckPwd, editName)
         textInputLayoutArray = arrayOf(editEmailLayout, editPwdLayout, editCheckPwdLayout, editNameLayout)
         isCorrectArray  = arrayOf(false,false,false,false,false,false,false)
-        errorMsgArray  = arrayOf(Constant.emailErrorMessage,  Constant.pwdErrorMessage, Constant.checkPwdErrorMessage)
+        errorMsgArray  = arrayOf(Constant.emailErrorMessage,  Constant.pwdErrorMessage, Constant.checkPwdErrorMessage, Constant.nickNameErrorMessage)
 
     }
 
@@ -39,23 +39,30 @@ class MainActivity : AppCompatActivity() {
 
     private fun inputData(){
         val inputEmail = RxTextView.textChanges(inputDataArray[0])
-            .map { it -> it.isEmpty() ||Pattern.matches(Constant.regexEmail, inputDataArray[0].text.toString())}
+            .map { it.isEmpty() ||Pattern.matches(Constant.regexEmail, inputDataArray[0].text.toString())}
             .subscribe {
                 isCorrectArray[0] = it
                 displayMsg(0,it)
             }
         val inputPwd = RxTextView.textChanges(inputDataArray[1])
-            .map { it -> it.isEmpty() ||Pattern.matches(Constant.regexPwd, inputDataArray[1].text.toString()) }
+            .map { it.isEmpty() ||Pattern.matches(Constant.regexPwd, inputDataArray[1].text.toString()) }
             .subscribe{
                 isCorrectArray[1] = it
                 displayMsg(1,it)
             }
         val checkInputPwd = RxTextView.textChanges(inputDataArray[2])
-            .map { it -> it.isEmpty() || inputDataArray[1].text.toString() == inputDataArray[2].text.toString() }
+            .map { it.isEmpty() || inputDataArray[1].text.toString() == inputDataArray[2].text.toString() }
             .subscribe{
                 isCorrectArray[2] = it
                 displayMsg(2,it)
             }
+        val inputNickName = RxTextView.textChanges(inputDataArray[3])
+            .map { it.isEmpty() || it.length in 8..30  }
+            .subscribe{
+                isCorrectArray[3] = it
+                displayMsg(3,it)
+            }
+        
     }
 
     private fun displayMsg(index:Int, check:Boolean){
