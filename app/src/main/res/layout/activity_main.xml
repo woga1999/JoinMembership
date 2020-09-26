@@ -15,13 +15,13 @@
             android:id="@+id/editEmailLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColorHint="@color/black">
+            android:textColorHint="@color/grey">
         ​
         <EditText
                 android:id="@+id/editEmail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/colorPrimary"
                 android:hint="@string/email"
                 android:inputType="text"
                 android:maxLength="30"
@@ -35,13 +35,13 @@
             android:id="@+id/editPwdLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColorHint="@color/black">
+            android:textColorHint="@color/grey">
         ​
         <EditText
                 android:id="@+id/editPwd"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/colorPrimary"
                 android:hint="@string/pwd"
                 android:minLines="8"
                 android:inputType="textPassword"
@@ -54,13 +54,13 @@
             android:id="@+id/editCheckPwdLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColorHint="@color/black">
+            android:textColorHint="@color/grey">
         ​
         <EditText
                 android:id="@+id/editCheckPwd"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/colorPrimary"
                 android:hint="@string/checkPwd"
                 android:inputType="textPassword"
                 android:minLines="8"
@@ -73,13 +73,13 @@
             android:id="@+id/editNameLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColorHint="@color/black">
+            android:textColorHint="@color/grey">
         ​
         <EditText
                 android:id="@+id/editName"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/colorPrimary"
                 android:hint="@string/nickname"
                 android:inputType="text"
                 android:textColor="@color/black" />
@@ -103,6 +103,7 @@
     <TextView android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:text="@string/choiceSex"
+              android:textColor="@color/black"
     />
     <RadioGroup android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -121,10 +122,12 @@
     <!--약관 동의-->
     <CheckBox android:layout_width="match_parent"
               android:layout_height="wrap_content"
+              android:id="@+id/needAgree"
               android:text="@string/agree"
     />
     <CheckBox android:layout_width="match_parent"
               android:layout_height="wrap_content"
+              android:id="@+id/marketingAgree"
               android:text="@string/marketingAgree"
     />
 

@@ -25,12 +25,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         init()
         inputData()
+        setData()
         setJoin()
     }
     private fun init() {
         inputDataArray = arrayOf(editEmail, editPwd, editCheckPwd, editName)
         textInputLayoutArray = arrayOf(editEmailLayout, editPwdLayout, editCheckPwdLayout, editNameLayout)
-        isCorrectArray  = arrayOf(false,false,false,false,false,false,false)
+        isCorrectArray  = arrayOf(false,false,false,false,false,false,false,false)
         errorMsgArray  = arrayOf(Constant.emailErrorMessage,  Constant.pwdErrorMessage, Constant.checkPwdErrorMessage, Constant.nickNameErrorMessage)
 
     }
@@ -43,14 +44,23 @@ class MainActivity : AppCompatActivity() {
 
         //생년월일 선택
 
+
         //성별선택
         sexRadioGroup.setOnCheckedChangeListener { group, checkedId ->
             val radio: RadioButton = findViewById(checkedId)
             Toast.makeText(applicationContext, "On checked Changed : ${radio.text}", Toast.LENGTH_SHORT).show()
-            isCorrectArray[4] = checkedId != -1
+            isCorrectArray[5] = checkedId != -1
         }
 
         //체크박스 선택
+        needAgree.setOnCheckedChangeListener { buttonView, isChecked->
+            Toast.makeText(applicationContext, "needAgree : $isChecked", Toast.LENGTH_SHORT).show()
+            isCorrectArray[6] = isChecked
+        }
+        marketingAgree.setOnCheckedChangeListener { buttonView, isChecked ->
+            Toast.makeText(applicationContext, "needlessAgree : $isChecked", Toast.LENGTH_SHORT).show()
+            isCorrectArray[7] = isChecked
+        }
     }
 
     private fun inputData(){
