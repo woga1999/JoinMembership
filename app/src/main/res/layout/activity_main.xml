@@ -91,12 +91,13 @@
                 android:id="@+id/editBirthLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColorHint="@color/black">
+                android:textColorHint="@color/grey">
             ​<EditText
             android:id="@+id/editBirth"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textColor="@color/black" />
+            android:backgroundTint="@color/colorPrimary"
+            android:hint="@string/birth" />
     </android.support.design.widget.TextInputLayout>
 
     <!--성별선택-->

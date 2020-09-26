@@ -1,14 +1,18 @@
 package com.example.myapplication
 
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.support.design.widget.TextInputLayout
 import android.support.v7.app.AppCompatActivity
+import android.view.MotionEvent
 import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.Toast
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
+import java.text.SimpleDateFormat
+import java.util.*
 import java.util.regex.Pattern
 
 class MainActivity : AppCompatActivity() {
@@ -29,8 +33,8 @@ class MainActivity : AppCompatActivity() {
         setJoin()
     }
     private fun init() {
-        inputDataArray = arrayOf(editEmail, editPwd, editCheckPwd, editName)
-        textInputLayoutArray = arrayOf(editEmailLayout, editPwdLayout, editCheckPwdLayout, editNameLayout)
+        inputDataArray = arrayOf(editEmail, editPwd, editCheckPwd, editName, editBirth)
+        textInputLayoutArray = arrayOf(editEmailLayout, editPwdLayout, editCheckPwdLayout, editNameLayout, editBirthLayout)
         isCorrectArray  = arrayOf(false,false,false,false,false,false,false,false)
         errorMsgArray  = arrayOf(Constant.emailErrorMessage,  Constant.pwdErrorMessage, Constant.checkPwdErrorMessage, Constant.nickNameErrorMessage)
 
@@ -41,10 +45,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setData(){
-
         //생년월일 선택
-
-
+        editBirth.setOnTouchListener { v, event ->
+            if(event.action == MotionEvent.ACTION_DOWN){
+                displayDatePickerDialog(editBirth)
+                isCorrectArray[4] = true
+            }
+            true
+        }
         //성별선택
         sexRadioGroup.setOnCheckedChangeListener { group, checkedId ->
             val radio: RadioButton = findViewById(checkedId)
@@ -61,6 +69,25 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(applicationContext, "needlessAgree : $isChecked", Toast.LENGTH_SHORT).show()
             isCorrectArray[7] = isChecked
         }
+    }
+
+    private fun displayDatePickerDialog(eT : EditText){
+        var cal = Calendar.getInstance()
+
+        val dateSetListener = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+            cal.set(Calendar.YEAR, year)
+            cal.set(Calendar.MONTH, monthOfYear)
+            cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+
+            val myFormat = "yyyy-MM-dd" // mention the format you need
+            val sdf = SimpleDateFormat(myFormat, Locale.KOREA)
+            eT.setText (sdf.format(cal.time))
+        }
+
+        DatePickerDialog(this@MainActivity, dateSetListener,
+            cal.get(Calendar.YEAR),
+            cal.get(Calendar.MONTH),
+            cal.get(Calendar.DAY_OF_MONTH)).show()
     }
 
     private fun inputData(){
