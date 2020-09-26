@@ -6,8 +6,9 @@ import android.support.design.widget.TextInputLayout
 import android.support.v7.app.AppCompatActivity
 import android.view.MotionEvent
 import android.widget.EditText
-import android.widget.RadioButton
 import android.widget.Toast
+import com.jakewharton.rxbinding2.widget.RxCompoundButton
+import com.jakewharton.rxbinding2.widget.RxRadioGroup
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
@@ -20,7 +21,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var inputDataArray: Array<EditText>
     private lateinit var textInputLayoutArray: Array<TextInputLayout>
     private lateinit var isCorrectArray: Array<Boolean>
-    private var isDone = false
+    private var doAgreeMareting = false
     internal val viewDisposables = CompositeDisposable() // 메모리 누수를 막기 위한 클래스
     private lateinit var errorMsgArray:Array<String>
 
@@ -29,46 +30,34 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         init()
         inputData()
-        setData()
-        setJoin()
     }
     private fun init() {
         inputDataArray = arrayOf(editEmail, editPwd, editCheckPwd, editName, editBirth)
         textInputLayoutArray = arrayOf(editEmailLayout, editPwdLayout, editCheckPwdLayout, editNameLayout, editBirthLayout)
         isCorrectArray  = arrayOf(false,false,false,false,false,false,false,false)
-        errorMsgArray  = arrayOf(Constant.emailErrorMessage,  Constant.pwdErrorMessage, Constant.checkPwdErrorMessage, Constant.nickNameErrorMessage)
+        errorMsgArray  = arrayOf(Constant.emailErrorMessage,  Constant.pwdErrorMessage, Constant.checkPwdErrorMessage, Constant.nickNameErrorMessage, Constant.birthErrorMessage)
 
     }
 
     private fun setJoin(){
-        btnJoin.isEnabled = isDone
+        for(i in 0 until isCorrectArray.size-1){
+            if(!isCorrectArray[i]) {
+                btnJoin.isEnabled = false
+                return
+            }
+        }
+        btnJoin.isEnabled = true
     }
 
-    private fun setData(){
+    private fun birthTouchListener():Boolean{
         //생년월일 선택
         editBirth.setOnTouchListener { v, event ->
             if(event.action == MotionEvent.ACTION_DOWN){
                 displayDatePickerDialog(editBirth)
-                isCorrectArray[4] = true
             }
             true
         }
-        //성별선택
-        sexRadioGroup.setOnCheckedChangeListener { group, checkedId ->
-            val radio: RadioButton = findViewById(checkedId)
-            Toast.makeText(applicationContext, "On checked Changed : ${radio.text}", Toast.LENGTH_SHORT).show()
-            isCorrectArray[5] = checkedId != -1
-        }
-
-        //체크박스 선택
-        needAgree.setOnCheckedChangeListener { buttonView, isChecked->
-            Toast.makeText(applicationContext, "needAgree : $isChecked", Toast.LENGTH_SHORT).show()
-            isCorrectArray[6] = isChecked
-        }
-        marketingAgree.setOnCheckedChangeListener { buttonView, isChecked ->
-            Toast.makeText(applicationContext, "needlessAgree : $isChecked", Toast.LENGTH_SHORT).show()
-            isCorrectArray[7] = isChecked
-        }
+        return editBirth.text.toString().isNotEmpty()
     }
 
     private fun displayDatePickerDialog(eT : EditText){
@@ -90,32 +79,60 @@ class MainActivity : AppCompatActivity() {
             cal.get(Calendar.DAY_OF_MONTH)).show()
     }
 
-    private fun inputData(){
+    private fun inputData() {
         val inputEmail = RxTextView.textChanges(inputDataArray[0])
-            .map { it.isEmpty() ||Pattern.matches(Constant.regexEmail, inputDataArray[0].text.toString())}
+            .map { it.isEmpty() || Pattern.matches(Constant.regexEmail, inputDataArray[0].text.toString()) }
             .subscribe {
                 isCorrectArray[0] = it
-                displayMsg(0,it)
+                displayMsg(0, it)
+                setJoin()
             }
         val inputPwd = RxTextView.textChanges(inputDataArray[1])
-            .map { it.isEmpty() ||Pattern.matches(Constant.regexPwd, inputDataArray[1].text.toString()) }
-            .subscribe{
+            .map { it.isEmpty() || Pattern.matches(Constant.regexPwd, inputDataArray[1].text.toString()) }
+            .subscribe {
                 isCorrectArray[1] = it
-                displayMsg(1,it)
+                displayMsg(1, it)
+                setJoin()
             }
         val checkInputPwd = RxTextView.textChanges(inputDataArray[2])
             .map { it.isEmpty() || inputDataArray[1].text.toString() == inputDataArray[2].text.toString() }
-            .subscribe{
+            .subscribe {
                 isCorrectArray[2] = it
-                displayMsg(2,it)
+                displayMsg(2, it)
+                setJoin()
             }
         val inputNickName = RxTextView.textChanges(inputDataArray[3])
-            .map { it.isEmpty() || it.length in 8..30  }
-            .subscribe{
+            .map { it.isEmpty() || it.length in 8..30 }
+            .subscribe {
                 isCorrectArray[3] = it
-                displayMsg(3,it)
+                displayMsg(3, it)
+                setJoin()
             }
-        viewDisposables.addAll(inputEmail, inputPwd, checkInputPwd, inputNickName)
+        val setBirthDate = RxTextView.textChanges(inputDataArray[4])
+            .map { it.isEmpty() || birthTouchListener()}
+            .subscribe {
+                isCorrectArray[4] = it
+                displayMsg(4, it)
+                setJoin()
+            }
+        val choiceSexRadioGroup = RxRadioGroup.checkedChanges(sexRadioGroup)
+            .subscribe{
+                //val radio: RadioButton = findViewById(it)
+                Toast.makeText(applicationContext, "On checked Changed : "+it.toString(), Toast.LENGTH_SHORT).show()
+                isCorrectArray[5] = it != -1
+                setJoin()
+            }
+        val agreeCheckBox = RxCompoundButton.checkedChanges(needAgree)
+            .subscribe {
+                isCorrectArray[6] = it
+                setJoin()
+            }
+        val marketingAgreeCheckBox = RxCompoundButton.checkedChanges(marketingAgree)
+            .subscribe {
+                isCorrectArray[7] = it
+            }
+
+        viewDisposables.addAll(inputEmail, inputPwd, checkInputPwd, inputNickName, setBirthDate, choiceSexRadioGroup, agreeCheckBox, marketingAgreeCheckBox)
     }
 
     private fun displayMsg(index:Int, check:Boolean){
