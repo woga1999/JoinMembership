@@ -7,6 +7,7 @@ import com.example.myapplication.R
 import kotlinx.android.synthetic.main.activity_information.*
 
 class ViewInformation : AppCompatActivity() {
+    //MainActivity에서 넘어와 회원 정보 확인 화면
     private lateinit var userInfoArray:Array<String>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -15,6 +16,7 @@ class ViewInformation : AppCompatActivity() {
         setInfo()
     }
 
+    //인텐트로 넘어온 값들 array 배열에 저장
     private fun getInfo(){
         var email=intent.getStringExtra("email")
         var pwd=intent.getStringExtra("pwd")
@@ -26,6 +28,7 @@ class ViewInformation : AppCompatActivity() {
         userInfoArray = arrayOf(email,pwd,nickname, userBirth, userSex,agree,marketingAgree)
     }
 
+    //textview에 배열에 있는 값을 넣어 사용자에게 보여주기 위한 함수
     @SuppressLint("SetTextI18n")
     private fun setInfo(){
         emailTextView.text = " 이메일 : " + userInfoArray[0]

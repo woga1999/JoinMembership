@@ -28,14 +28,15 @@ import java.util.*
 import java.util.regex.Pattern
 
 class MainActivity : AppCompatActivity() {
+    //회원 정보 기입하는 Activity
 
-    protected lateinit var inputDataArray: Array<EditText>
-    private lateinit var textInputLayoutArray: Array<TextInputLayout>
-    private lateinit var isCorrectArray: Array<Boolean>
-    private var userSex:String = ""
+    protected lateinit var inputDataArray: Array<EditText> //edittext와 입력값들을 관리하기 위한 배열
+    private lateinit var textInputLayoutArray: Array<TextInputLayout> //textInputLayout을 관리하기 위한 배열
+    private lateinit var isCorrectArray: Array<Boolean> //맞았는지 확인하고 JOIN 버튼을 활성화하기 위한 boolean 배열
+    private var userSex:String = "" //사용자 성별 선택시 저장될 문자열
     internal val viewDisposables = CompositeDisposable() // 메모리 누수를 막기 위한 클래스
-    private lateinit var errorMsgArray:Array<String>
-    private lateinit var sexArray:Array<String>
+    private lateinit var errorMsgArray:Array<String> //조건에 맞지않는 값을 입력하면 나타낼 에러 메세지
+    private lateinit var sexArray:Array<String> //남자,여자,선택하지 않음 선택지들
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +45,8 @@ class MainActivity : AppCompatActivity() {
         inputData()
         setJoin()
     }
+
+    //배열 값들 초기화
     private fun init() {
         inputDataArray = arrayOf(editEmail, editPwd, editCheckPwd, editName, editBirth)
         textInputLayoutArray = arrayOf(editEmailLayout, editPwdLayout, editCheckPwdLayout, editNameLayout, editBirthLayout)
@@ -52,6 +55,7 @@ class MainActivity : AppCompatActivity() {
         sexArray = arrayOf("Male","Female","Nothing")
     }
 
+    //가입 버튼 활성화, 비활성화하는 함수
     private fun setJoin(){
         for(i in 0 until isCorrectArray.size-1){
             if(!isCorrectArray[i]) {
@@ -63,13 +67,15 @@ class MainActivity : AppCompatActivity() {
         loading(btnJoin)
     }
 
+    //가입 버튼 누를 때, Progress bar + 어두운 반투명 화면 띄우는 로딩화면
     private fun loading(btn:Button){
         btn.setOnClickListener { v->
             DialogTask(this).execute()
         }
     }
 
-    protected fun checkExecption(): Int{
+    //progress bar 후에 Http status code를 반환하는 함수
+    protected fun checkException(): Int{
         if( calculateAge() != -1 && calculateAge() <= 14) return 400
         else if(UserStorage.prefs.getString(inputDataArray[0].text.toString(), "no email") == "exist email") return 401
         else{
@@ -78,6 +84,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    //만 나이 계산하는 함수
     private fun calculateAge(): Int{
         var nowTime : LocalDate=LocalDate.now()
         var userBirth = LocalDate.parse(inputDataArray[4].text.toString(), DateTimeFormatter.ISO_DATE);
@@ -89,8 +96,8 @@ class MainActivity : AppCompatActivity() {
         return age
     }
 
+    //생년월일 EditText 선택할 시 뜨는 Date Picker Dialog
     private fun birthTouchListener():Boolean{
-        //생년월일 선택
         editBirth.setOnTouchListener { v, event ->
             if(event.action == MotionEvent.ACTION_DOWN){
                 displayDatePickerDialog(editBirth)
@@ -106,6 +113,7 @@ class MainActivity : AppCompatActivity() {
         return Pattern.matches(Constant.regexBirth, editBirth.text.toString())
     }
 
+    //생년월일 선택하기 위한 DatePickerDialog
     private fun displayDatePickerDialog(eT : EditText){
         var cal = Calendar.getInstance()
 
@@ -125,6 +133,7 @@ class MainActivity : AppCompatActivity() {
             cal.get(Calendar.DAY_OF_MONTH)).show()
     }
 
+    //회원가입을 입력할 때 View 이벤트들을 관리하는 반응성 코드들 - RxBinding 이용
     private fun inputData() {
         val inputEmail = RxTextView.textChanges(inputDataArray[0])
             .map { it.isEmpty() || Pattern.matches(Constant.regexEmail, inputDataArray[0].text.toString()) }
@@ -185,6 +194,7 @@ class MainActivity : AppCompatActivity() {
         viewDisposables.addAll(inputEmail, inputPwd, checkInputPwd, inputNickName, setBirthDate, choiceSexRadioGroup, agreeCheckBox, marketingAgreeCheckBox)
     }
 
+    //textinputLayout에 에러 메세지 띄울 함수
     private fun displayMsg(index:Int, check:Boolean){
         textInputLayoutArray[index].isErrorEnabled = !check
         if(!check){
@@ -192,6 +202,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    //HTTP Status Code가 정상 반환값이 아닐때 알림 함수
     private fun displayToast(code:Int){
         var str = ""
         if(code == 400){
@@ -204,6 +215,7 @@ class MainActivity : AppCompatActivity() {
         deleteAllValue()
     }
 
+    //정상 정보 기입 상태면, 정보 확인을 위한 Activity로 전환
     protected fun startActivity(){
         var email = inputDataArray[0].text.toString()
         var password = inputDataArray[1].text.toString()
@@ -216,6 +228,7 @@ class MainActivity : AppCompatActivity() {
         startActivity(intentFor<ViewInformation>("email" to email,"pwd" to password,"nickname" to nickName, "birth" to birth, "sex" to sex, "checkBox1" to checkBox1, "checkBox2" to checkBox2))
     }
 
+    //Progress Bar 로딩화면을 위한 class
     class DialogTask(var activity: MainActivity) : AsyncTask<Void, Void, Void>(){
 
         var dialog = Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar)
@@ -234,7 +247,7 @@ class MainActivity : AppCompatActivity() {
         override fun onPostExecute(result: Void?) {
             super.onPostExecute(result)
             dialog.dismiss()
-            var statusCode = activity.checkExecption()
+            var statusCode = activity.checkException()
             if(statusCode != 200){
                 activity.displayToast(statusCode)
             }
@@ -245,6 +258,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    //가입 버튼을 누르고 다시 입력할 수 있게 초기화
     private fun deleteAllValue(){
         for(edit in inputDataArray){
             edit.setText("")
@@ -256,8 +270,10 @@ class MainActivity : AppCompatActivity() {
         needAgree.isChecked = false
         marketingAgree.isChecked = false
         btnJoin.isEnabled = false
+        userSex = ""
     }
 
+    //안드로이드 생명주기에 따라 함수사용
     override fun onRestart() {
         super.onRestart()
         deleteAllValue()
