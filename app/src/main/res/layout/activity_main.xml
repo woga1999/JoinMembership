@@ -3,10 +3,12 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools" xmlns:app="http://schemas.android.com/apk/res-auto"
         android:orientation="vertical"
-        android:gravity="center"
+        android:gravity="center_horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".MainActivity">
+
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/putYourInfo" android:textSize="30dp" android:layout_margin="30dp"/>
 
     <!--정보 입력-->
 
@@ -106,19 +108,24 @@
     <TextView android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:text="@string/choiceSex"
+              android:layout_margin="10dp"
               android:textColor="@color/black"
     />
     <RadioGroup android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:gravity="center"
                 android:id="@+id/sexRadioGroup"
     >
         <RadioButton android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:text="@string/man"/>
+                     android:layout_margin="10dp"
+                     android:text="@string/man"/>
         <RadioButton android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:text="@string/woman"/>
+                     android:layout_margin="10dp"
+                     android:text="@string/woman"/>
         <RadioButton android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:text="@string/none"/>
+                     android:layout_margin="10dp"
+                     android:text="@string/none"/>
 
     </RadioGroup>
 
@@ -126,11 +133,13 @@
     <CheckBox android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:id="@+id/needAgree"
+              android:layout_margin="10dp"
               android:text="@string/agree"
     />
     <CheckBox android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:id="@+id/marketingAgree"
+              android:layout_margin="10dp"
               android:text="@string/marketingAgree"
     />
 
