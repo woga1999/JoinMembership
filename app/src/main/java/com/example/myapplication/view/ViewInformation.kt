@@ -1,8 +1,9 @@
-package com.example.myapplication
+package com.example.myapplication.view
 
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import com.example.myapplication.R
 import kotlinx.android.synthetic.main.activity_information.*
 
 class ViewInformation : AppCompatActivity() {

@@ -1,4 +1,4 @@
-package com.example.myapplication
+package com.example.myapplication.view
 
 import android.app.DatePickerDialog
 import android.app.Dialog
@@ -6,12 +6,14 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.support.design.widget.TextInputLayout
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.KeyEvent
 import android.view.KeyEvent.KEYCODE_ENTER
 import android.view.MotionEvent
 import android.widget.Button
 import android.widget.EditText
+import com.example.myapplication.R
+import com.example.myapplication.app.UserStorage
+import com.example.myapplication.data.Constant
 import com.jakewharton.rxbinding2.widget.RxCompoundButton
 import com.jakewharton.rxbinding2.widget.RxRadioGroup
 import com.jakewharton.rxbinding2.widget.RxTextView
