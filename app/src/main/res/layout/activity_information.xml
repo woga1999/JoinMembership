@@ -4,11 +4,12 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
     <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/welcome" android:layout_margin="30dp" android:textSize="30dp" android:gravity="center"/>
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/emailTextView" android:layout_margin="10dp" android:textSize="20dp" android:gravity="center"/>
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/pwdTextView" android:layout_margin="10dp" android:textSize="20dp" android:gravity="center"/>
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/nickNameTextView" android:layout_margin="10dp" android:textSize="20dp" android:gravity="center"/>
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/userSexTextView" android:layout_margin="10dp" android:textSize="20dp" android:gravity="center"/>
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/agreeTextView" android:layout_margin="10dp" android:textSize="20dp" android:gravity="center"/>
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/marketingAgreeTextView" android:layout_margin="10dp" android:textSize="20dp" android:gravity="center"/>
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/emailTextView" android:layout_margin="10dp" android:textSize="15dp" />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/pwdTextView" android:layout_margin="10dp" android:textSize="15dp" />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/nickNameTextView" android:layout_margin="10dp" android:textSize="15dp" />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/birthTextView" android:layout_margin="10dp" android:textSize="15dp" />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/userSexTextView" android:layout_margin="10dp" android:textSize="15dp" />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/agreeTextView" android:layout_margin="10dp" android:textSize="15dp" />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/marketingAgreeTextView" android:layout_margin="10dp" android:textSize="15dp"/>
 
 </LinearLayout>

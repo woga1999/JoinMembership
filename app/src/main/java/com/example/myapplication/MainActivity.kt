@@ -52,14 +52,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun setJoin(){
         for(i in 0 until isCorrectArray.size-1){
-            Log.e("setJoin, int For", i.toString())
             if(!isCorrectArray[i]) {
                 btnJoin.isEnabled = false
                 return
             }
         }
         btnJoin.isEnabled = true
-        Log.e("setJoin: ", btnJoin.isEnabled.toString())
         loading(btnJoin)
     }
 
@@ -132,7 +130,6 @@ class MainActivity : AppCompatActivity() {
                 if(!inputDataArray[0].text.isEmpty()) isCorrectArray[0] = it
                 else isCorrectArray[0] = false
                 displayMsg(0, it)
-                Log.e("setemail: ", isCorrectArray[0].toString())
                 setJoin()
             }
         val inputPwd = RxTextView.textChanges(inputDataArray[1])
@@ -141,7 +138,6 @@ class MainActivity : AppCompatActivity() {
                 if(!inputDataArray[1].text.isEmpty()) isCorrectArray[1] = it
                 else isCorrectArray[1] = false
                 displayMsg(1, it)
-                Log.e("setfirstpwd: ", isCorrectArray[1].toString())
                 setJoin()
             }
         val checkInputPwd = RxTextView.textChanges(inputDataArray[2])
@@ -150,7 +146,6 @@ class MainActivity : AppCompatActivity() {
                 if(!inputDataArray[2].text.isEmpty()) isCorrectArray[2] = it
                 else isCorrectArray[2] = false
                 displayMsg(2, it)
-                Log.e("setPwd: ", isCorrectArray[2].toString())
                 setJoin()
             }
         val inputNickName = RxTextView.textChanges(inputDataArray[3])
@@ -159,7 +154,6 @@ class MainActivity : AppCompatActivity() {
                 if(!inputDataArray[3].text.isEmpty()) isCorrectArray[3] = it
                 else isCorrectArray[3] = false
                 displayMsg(3, it)
-                Log.e("setNick: ", isCorrectArray[3].toString())
                 setJoin()
             }
         val setBirthDate = RxTextView.textChanges(inputDataArray[4])
@@ -167,7 +161,6 @@ class MainActivity : AppCompatActivity() {
             .subscribe {
                 isCorrectArray[4] = it
                 if(!inputDataArray[4].text.isEmpty()) displayMsg(4, it)
-                Log.e("setBirth : ", isCorrectArray[4].toString())
                 setJoin()
             }
 
@@ -175,13 +168,11 @@ class MainActivity : AppCompatActivity() {
             .subscribe{
                 isCorrectArray[5] = it != -1
                 if(it != -1) userSex = sexArray[it-1]
-                Log.e("setSex : ", isCorrectArray[5].toString())
                 setJoin()
             }
         val agreeCheckBox = RxCompoundButton.checkedChanges(needAgree)
             .subscribe {
                 isCorrectArray[6] = it
-                Log.e("setCheckBox: ", isCorrectArray[6].toString())
                 setJoin()
             }
         val marketingAgreeCheckBox = RxCompoundButton.checkedChanges(marketingAgree)
@@ -208,17 +199,19 @@ class MainActivity : AppCompatActivity() {
             str = "이미 가입된 사용자입니다."
         }
         toast( "($code) $str")
+        deleteAllValue()
     }
 
     protected fun startActivity(){
         var email = inputDataArray[0].text.toString()
         var password = inputDataArray[1].text.toString()
         var nickName = inputDataArray[3].text.toString()
+        var birth = inputDataArray[4].text.toString()
         var sex = userSex
         var checkBox1 = "약관에 동의했습니다."
         var checkBox2="마케팅 약관에 동의하지 않았습니다."
         if(isCorrectArray[7]) checkBox2 = "마케팅 약관에 동의했습니다."
-        startActivity(intentFor<ViewInformation>("email" to email,"pwd" to password,"nickname" to nickName, "sex" to sex, "checkBox1" to checkBox1, "checkBox2" to checkBox2))
+        startActivity(intentFor<ViewInformation>("email" to email,"pwd" to password,"nickname" to nickName, "birth" to birth, "sex" to sex, "checkBox1" to checkBox1, "checkBox2" to checkBox2))
     }
 
     class DialogTask(var activity: MainActivity) : AsyncTask<Void, Void, Void>(){
@@ -250,6 +243,23 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    private fun deleteAllValue(){
+        for(edit in inputDataArray){
+            edit.setText("")
+        }
+        for(i in 0..isCorrectArray.size){
+            isCorrectArray[i] = false
+        }
+        sexRadioGroup.clearCheck()
+        needAgree.isChecked = false
+        marketingAgree.isChecked = false
+        btnJoin.isEnabled = false
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        deleteAllValue()
+    }
     override fun onStop() {
         super.onStop()
         viewDisposables.clear()
