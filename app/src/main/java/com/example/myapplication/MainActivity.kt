@@ -11,24 +11,28 @@ import android.view.KeyEvent.KEYCODE_ENTER
 import android.view.MotionEvent
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Toast
 import com.jakewharton.rxbinding2.widget.RxCompoundButton
 import com.jakewharton.rxbinding2.widget.RxRadioGroup
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
+import org.jetbrains.anko.intentFor
+import org.jetbrains.anko.toast
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 import java.util.regex.Pattern
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var inputDataArray: Array<EditText>
+    protected lateinit var inputDataArray: Array<EditText>
     private lateinit var textInputLayoutArray: Array<TextInputLayout>
     private lateinit var isCorrectArray: Array<Boolean>
-    private var doAgreeMareting = false
+    private var userSex:String = ""
     internal val viewDisposables = CompositeDisposable() // 메모리 누수를 막기 위한 클래스
     private lateinit var errorMsgArray:Array<String>
+    private lateinit var sexArray:Array<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,16 +46,16 @@ class MainActivity : AppCompatActivity() {
         textInputLayoutArray = arrayOf(editEmailLayout, editPwdLayout, editCheckPwdLayout, editNameLayout, editBirthLayout)
         isCorrectArray  = arrayOf(false,false,false,false,false,false,false,false)
         errorMsgArray  = arrayOf(Constant.emailErrorMessage,  Constant.pwdErrorMessage, Constant.checkPwdErrorMessage, Constant.nickNameErrorMessage, Constant.birthErrorMessage)
-
+        sexArray = arrayOf("Male","Female","Nothing")
     }
 
     private fun setJoin(){
-        for(i in 0 until isCorrectArray.size-1){
-            if(!isCorrectArray[i]) {
-                btnJoin.isEnabled = false
-                return
-            }
-        }
+//        for(i in 0 until isCorrectArray.size-1){
+//            if(!isCorrectArray[i]) {
+//                btnJoin.isEnabled = false
+//                return
+//            }
+//        }
         btnJoin.isEnabled = true
         loading(btnJoin)
     }
@@ -60,6 +64,26 @@ class MainActivity : AppCompatActivity() {
         btn.setOnClickListener { v->
             DialogTask(this).execute()
         }
+    }
+
+    public fun checkExecption(): Int{
+        if( calculateAge() != -1 && calculateAge() <= 14) return 400
+        else if(UserStorage.prefs.getString(inputDataArray[0].text.toString(), "email") == "email") return 401
+        else{
+            UserStorage.prefs.setString(inputDataArray[0].text.toString(), "email")
+            return 200
+        }
+    }
+
+    private fun calculateAge(): Int{
+        var nowTime : LocalDate=LocalDate.now()
+        var userBirth = LocalDate.parse(inputDataArray[4].text.toString(), DateTimeFormatter.ISO_DATE);
+        var age = nowTime.year - userBirth.year
+        var month = nowTime.monthValue - userBirth.monthValue
+        if(month <0 || (month == 0 && nowTime.dayOfMonth < userBirth.dayOfMonth)){
+            age--
+        }
+        return age
     }
 
     private fun birthTouchListener():Boolean{
@@ -141,9 +165,8 @@ class MainActivity : AppCompatActivity() {
 
         val choiceSexRadioGroup = RxRadioGroup.checkedChanges(sexRadioGroup)
             .subscribe{
-                //val radio: RadioButton = findViewById(it)
-                Toast.makeText(applicationContext, "On checked Changed : "+it.toString(), Toast.LENGTH_SHORT).show()
                 isCorrectArray[5] = it != -1
+                if(it != -1) userSex = sexArray[it-1]
                 setJoin()
             }
         val agreeCheckBox = RxCompoundButton.checkedChanges(needAgree)
@@ -166,6 +189,28 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun displayToast(code:Int){
+        var str = ""
+        if(code == 400){
+            str = "만 14세 미만은 회원가입 할 수 없습니다."
+        }
+        else if(code == 401){
+            str = "이미 가입된 사용자입니다."
+        }
+        toast( "($code) $str")
+    }
+
+    protected fun startActivity(){
+        var email = inputDataArray[0].text.toString()
+        var password = inputDataArray[1].text.toString()
+        var nickName = inputDataArray[3].text.toString()
+        var sex = userSex
+        var checkBox1 = "약관에 동의했습니다."
+        var checkBox2="마케팅 약관에 동의하지 않았습니다."
+        if(isCorrectArray[7]) checkBox2 = "마케팅 약관에 동의했습니다."
+        startActivity(intentFor<ViewInformation>("email" to email,"pwd" to password,"nickname" to nickName, "sex" to sex, "checkBox1" to checkBox1, "checkBox2" to checkBox2))
+    }
+
     class DialogTask(var activity: MainActivity) : AsyncTask<Void, Void, Void>(){
 
         var dialog = Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar)
@@ -184,6 +229,13 @@ class MainActivity : AppCompatActivity() {
         override fun onPostExecute(result: Void?) {
             super.onPostExecute(result)
             dialog.dismiss()
+            var statusCode = activity.checkExecption()
+            if(statusCode != 200){
+                activity.displayToast(statusCode)
+            }
+            else{
+                activity.startActivity()
+            }
         }
 
     }
@@ -193,3 +245,4 @@ class MainActivity : AppCompatActivity() {
         viewDisposables.clear()
     }
 }
+
