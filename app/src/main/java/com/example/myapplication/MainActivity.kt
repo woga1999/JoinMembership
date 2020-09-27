@@ -50,12 +50,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setJoin(){
-//        for(i in 0 until isCorrectArray.size-1){
-//            if(!isCorrectArray[i]) {
-//                btnJoin.isEnabled = false
-//                return
-//            }
-//        }
+        for(i in 0 until isCorrectArray.size-1){
+            if(!isCorrectArray[i]) {
+                btnJoin.isEnabled = false
+                return
+            }
+        }
         btnJoin.isEnabled = true
         loading(btnJoin)
     }
@@ -66,11 +66,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    public fun checkExecption(): Int{
+    protected fun checkExecption(): Int{
         if( calculateAge() != -1 && calculateAge() <= 14) return 400
-        else if(UserStorage.prefs.getString(inputDataArray[0].text.toString(), "email") == "email") return 401
+        else if(UserStorage.prefs.getString(inputDataArray[0].text.toString(), "no email") == "exist email") return 401
         else{
-            UserStorage.prefs.setString(inputDataArray[0].text.toString(), "email")
+            UserStorage.prefs.setString(inputDataArray[0].text.toString(), "exist email")
             return 200
         }
     }

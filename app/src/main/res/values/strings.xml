@@ -12,4 +12,5 @@
     <string name="join">JOIN</string>
     <string name="agree">약관 동의 체크박수(필수)</string>
     <string name="marketingAgree">마케팅 동의 체크박수(선택)</string>
+    <string name="welcome">회원이 된 것을 축하합니다!</string>
 </resources>
