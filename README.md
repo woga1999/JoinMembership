@@ -3,7 +3,10 @@
 # 회원가입 및 정보 화면 구현
 
 minAPI : 26
+
 Lib : RxBinding, anko
+
+Language : Kotlin
 <br>
 
 
