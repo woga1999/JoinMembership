@@ -6,6 +6,7 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.support.design.widget.TextInputLayout
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.KeyEvent
 import android.view.KeyEvent.KEYCODE_ENTER
 import android.view.MotionEvent
@@ -204,6 +205,7 @@ class MainActivity : AppCompatActivity() {
 
     //HTTP Status Code가 정상 반환값이 아닐때 알림 함수
     private fun displayToast(code:Int){
+        Log.e("MainActivity", "displayToast")
         var str = ""
         if(code == 400){
             str = "만 14세 미만은 회원가입 할 수 없습니다."
@@ -213,6 +215,7 @@ class MainActivity : AppCompatActivity() {
         }
         toast( "($code) $str")
         deleteAllValue()
+        Log.e("MainActivity", "displayToast End")
     }
 
     //정상 정보 기입 상태면, 정보 확인을 위한 Activity로 전환
@@ -250,6 +253,7 @@ class MainActivity : AppCompatActivity() {
             var statusCode = activity.checkException()
             if(statusCode != 200){
                 activity.displayToast(statusCode)
+                Log.e("MainActivity", "onPostExecute statusCode")
             }
             else{
                 activity.startActivity()
@@ -263,7 +267,7 @@ class MainActivity : AppCompatActivity() {
         for(edit in inputDataArray){
             edit.setText("")
         }
-        for(i in 0..isCorrectArray.size){
+        for(i in 0 until isCorrectArray.size-1){
             isCorrectArray[i] = false
         }
         sexRadioGroup.clearCheck()
